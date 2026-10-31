@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FT303 Big Data in Finance — Ôn thi & Thi thử giữa kỳ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f6f5f1; --surface:#ffffff; --surface-2:#f0eee8; --ink:#1c1f24; --muted:#636a74; --line:#e2dfd6;
+  --accent:#1f4e79; --accent-2:#2f6fa8; --accent-soft:#e6eef7;
+  --ok:#1d7a4a; --ok-soft:#e3f3ea; --bad:#b4372f; --bad-soft:#fbe9e7; --warn:#a86a00; --warn-soft:#fff4dc;
+  --shadow:0 1px 2px rgba(20,25,35,.05),0 4px 14px rgba(20,25,35,.05);
+  --radius:12px;
+}
+@media (prefers-color-scheme:dark){
+  :root{
+    --bg:#14171c; --surface:#1c2027; --surface-2:#242932; --ink:#e8eaee; --muted:#9aa2ae; --line:#2e343e;
+    --accent:#7fb2e5; --accent-2:#9cc5ee; --accent-soft:#1f2c3b;
+    --ok:#4fc58a; --ok-soft:#173326; --bad:#f07b72; --bad-soft:#3a1f1d; --warn:#f0b54a; --warn-soft:#3a2e15;
+    --shadow:none;
+  }
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{font-family:"Be Vietnam Pro",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;background:var(--bg);color:var(--ink);line-height:1.55;font-size:15.5px}
+code,.mono{font-family:"JetBrains Mono",Consolas,monospace;font-size:.92em}
+code{background:var(--surface-2);padding:.1em .35em;border-radius:5px}
+button{font:inherit;color:inherit;cursor:pointer}
+.wrap{max-width:920px;margin:0 auto;padding:0 18px}
+
+/* header */
+header{background:var(--surface);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:20}
+.head{display:flex;align-items:center;gap:16px;padding:12px 0;flex-wrap:wrap}
+.brand{font-weight:700;letter-spacing:-.01em}
+.brand small{display:block;font-weight:500;color:var(--muted);font-size:12.5px;letter-spacing:0}
+.tabs{display:flex;gap:4px;margin-left:auto;background:var(--surface-2);padding:4px;border-radius:10px}
+.tab{border:0;background:transparent;padding:7px 14px;border-radius:7px;font-weight:600;font-size:14px;color:var(--muted)}
+.tab.on{background:var(--surface);color:var(--ink);box-shadow:var(--shadow)}
+main{padding:22px 0 80px}
+.view{display:none}.view.on{display:block}
+
+/* generic */
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}
+.btn{border:1px solid var(--line);background:var(--surface);padding:8px 14px;border-radius:9px;font-weight:600;font-size:14px}
+.btn:hover{border-color:var(--accent-2)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+@media (prefers-color-scheme:dark){.btn.primary{color:#0f1720}}
+.btn.primary:hover{filter:brightness(1.08)}
+.btn.ghost{background:transparent}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.chip{border:1px solid var(--line);background:var(--surface);padding:5px 11px;border-radius:999px;font-size:13px;font-weight:500;color:var(--muted)}
+.chip.on{background:var(--accent-soft);border-color:var(--accent-2);color:var(--accent)}
+.muted{color:var(--muted)}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.spacer{flex:1}
+h2{font-size:21px;margin:0 0 4px;letter-spacing:-.01em}
+.sub{color:var(--muted);margin:0 0 18px;font-size:14px}
+
+/* toolbar */
+.toolbar{padding:14px 16px;margin-bottom:16px}
+.toolbar .chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+.progress{height:6px;background:var(--surface-2);border-radius:99px;overflow:hidden;margin-top:12px}
+.progress > i{display:block;height:100%;background:var(--accent-2);width:0;transition:width .3s}
+.stats{font-size:13.5px;color:var(--muted)}
+.stats b{color:var(--ink)}
+label.tog{display:inline-flex;align-items:center;gap:6px;font-size:13.5px;color:var(--muted);cursor:pointer}
+
+/* question */
+.q{padding:18px 18px 16px;margin-bottom:14px}
+.qhead{display:flex;gap:10px;align-items:center;margin-bottom:8px}
+.qnum{font-weight:700;color:var(--accent);font-size:14px}
+.tag{font-size:11.5px;font-weight:600;padding:2px 8px;border-radius:99px;background:var(--surface-2);color:var(--muted);text-transform:uppercase;letter-spacing:.03em}
+.qtext{font-weight:500;margin:0 0 12px;font-size:16px}
+.opts{display:grid;gap:8px}
+.opt{display:flex;gap:10px;align-items:flex-start;text-align:left;width:100%;background:var(--surface);border:1.5px solid var(--line);border-radius:10px;padding:10px 12px;transition:border-color .15s,background .15s}
+.opt:hover:not([disabled]){border-color:var(--accent-2);background:var(--accent-soft)}
+.opt[disabled]{cursor:default}
+.opt .L{flex:none;width:26px;height:26px;border-radius:7px;display:grid;place-items:center;font-weight:700;font-size:13px;background:var(--surface-2);color:var(--muted)}
+.opt .T{padding-top:2px}
+.opt.sel{border-color:var(--accent-2);background:var(--accent-soft)}
+.opt.sel .L{background:var(--accent);color:#fff}
+.opt.right{border-color:var(--ok);background:var(--ok-soft)}
+.opt.right .L{background:var(--ok);color:#fff}
+.opt.wrong{border-color:var(--bad);background:var(--bad-soft)}
+.opt.wrong .L{background:var(--bad);color:#fff}
+.opt.dim{opacity:.7}
+.qfoot{display:flex;gap:8px;margin-top:12px;align-items:center}
+.verdict{font-weight:700;font-size:14px}
+.verdict.ok{color:var(--ok)}.verdict.no{color:var(--bad)}
+
+/* explanation */
+.exp{margin-top:14px;border-top:1px dashed var(--line);padding-top:12px;display:grid;gap:8px}
+.exp-item{display:grid;grid-template-columns:auto 1fr;gap:10px;padding:10px 12px;border-radius:9px;background:var(--surface-2);font-size:14.5px}
+.exp-item.c{background:var(--ok-soft)}
+.exp-item .badge{font-weight:700;font-size:12.5px;padding:2px 8px;border-radius:6px;height:fit-content;white-space:nowrap}
+.exp-item.c .badge{background:var(--ok);color:#fff}
+.exp-item.w .badge{background:var(--bad-soft);color:var(--bad);border:1px solid var(--bad)}
+@media (prefers-color-scheme:dark){.exp-item.c .badge{color:#0f1720}}
+.exp-item .h{font-weight:600;margin-bottom:2px}
+.exp-item.c .h{color:var(--ok)}
+.exp-item.w .h{color:var(--bad)}
+.keyline{font-size:14px;padding:8px 12px;border-left:3px solid var(--accent-2);background:var(--accent-soft);border-radius:0 8px 8px 0}
+
+/* essay */
+.essay{padding:18px;margin-bottom:14px}
+.essay h3{margin:0 0 6px;font-size:16.5px}
+.essay .prompt{margin:0 0 10px}
+.essay ol,.essay ul{margin:6px 0;padding-left:22px}
+.sol{display:none;margin-top:12px;border-top:1px dashed var(--line);padding-top:12px}
+.sol.on{display:block}
+.sol .vn{background:var(--warn-soft);border-left:3px solid var(--warn);padding:8px 12px;border-radius:0 8px 8px 0;margin:8px 0;font-size:14.5px}
+table.t{border-collapse:collapse;width:100%;font-size:14px;margin:8px 0;display:block;overflow-x:auto}
+table.t th,table.t td{border:1px solid var(--line);padding:6px 9px;text-align:center;white-space:nowrap}
+table.t th{background:var(--surface-2);font-weight:600}
+.section-title{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin:26px 0 10px}
+
+/* exam */
+.setup{padding:22px}
+.setup .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px;margin:16px 0 20px}
+.field .lbl{font-weight:600;font-size:14px;margin-bottom:8px}
+.seg{display:flex;flex-wrap:wrap;gap:6px}
+.hist{margin-top:18px;font-size:14px}
+.hist table{width:100%;border-collapse:collapse}
+.hist td,.hist th{padding:6px 8px;border-bottom:1px solid var(--line);text-align:left}
+.hist th{font-size:12.5px;color:var(--muted);font-weight:600}
+
+.exambar{position:sticky;top:61px;z-index:15;padding:10px 14px;margin-bottom:14px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.timer{font-family:"JetBrains Mono",monospace;font-size:22px;font-weight:500;padding:4px 12px;border-radius:9px;background:var(--surface-2);min-width:104px;text-align:center}
+.timer.warn{background:var(--warn-soft);color:var(--warn)}
+.timer.crit{background:var(--bad-soft);color:var(--bad);animation:pulse 1s infinite}
+@keyframes pulse{50%{opacity:.6}}
+.nav{display:grid;grid-template-columns:repeat(auto-fill,minmax(38px,1fr));gap:6px;padding:14px;margin-bottom:14px}
+.nav button{border:1.5px solid var(--line);background:var(--surface);border-radius:8px;height:36px;font-weight:600;font-size:13px;position:relative}
+.nav button.ans{background:var(--accent-soft);border-color:var(--accent-2);color:var(--accent)}
+.nav button.cur{outline:2px solid var(--accent);outline-offset:1px}
+.nav button.flag::after{content:"";position:absolute;top:3px;right:3px;width:7px;height:7px;border-radius:50%;background:var(--warn)}
+.nav button.r{background:var(--ok-soft);border-color:var(--ok);color:var(--ok)}
+.nav button.w{background:var(--bad-soft);border-color:var(--bad);color:var(--bad)}
+.nav button.e{border-style:dashed;color:var(--muted)}
+.legend{display:flex;gap:14px;font-size:12.5px;color:var(--muted);flex-wrap:wrap;padding:0 14px 12px;margin-top:-6px}
+.legend span::before{content:"";display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px;border:1.5px solid var(--line)}
+.legend .a::before{background:var(--accent-soft);border-color:var(--accent-2)}
+.legend .f::before{background:var(--warn);border-color:var(--warn);border-radius:50%}
+
+.result{padding:22px;margin-bottom:16px}
+.score{display:flex;gap:26px;align-items:center;flex-wrap:wrap}
+.big{font-size:52px;font-weight:700;line-height:1;letter-spacing:-.03em}
+.big small{font-size:20px;color:var(--muted);font-weight:500}
+.kpis{display:flex;gap:20px;flex-wrap:wrap}
+.kpi .v{font-size:20px;font-weight:700}
+.kpi .k{font-size:12.5px;color:var(--muted)}
+.bytopic{margin-top:18px;display:grid;gap:7px}
+.bt{display:grid;grid-template-columns:200px 1fr 54px;gap:10px;align-items:center;font-size:13.5px}
+.bt .bar{height:8px;background:var(--surface-2);border-radius:99px;overflow:hidden}
+.bt .bar i{display:block;height:100%;background:var(--ok)}
+@media (max-width:600px){.bt{grid-template-columns:120px 1fr 44px}.exambar{top:0}.big{font-size:42px}}
+.kbd{font-size:12px;color:var(--muted)}
+.empty{padding:30px;text-align:center;color:var(--muted)}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap head">
+    <div class="brand">FT303 · Big Data in Finance<small>Mock Midterm — Ôn tập & Thi thử</small></div>
+    <nav class="tabs">
+      <button class="tab on" data-view="review">Ôn trắc nghiệm</button>
+      <button class="tab" data-view="essay">Tự luận</button>
+      <button class="tab" data-view="exam">Thi thử</button>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <!-- REVIEW -->
+  <section class="view on" id="v-review">
+    <h2>Ôn tập trắc nghiệm</h2>
+    <p class="sub">Bấm chọn một đáp án là hiện ngay kết quả: vì sao đáp án đúng, và từng phương án còn lại sai ở đâu.</p>
+    <div class="card toolbar">
+      <div class="row">
+        <div class="stats">Đã làm <b id="r-done">0</b>/<b id="r-total">40</b> · Đúng <b id="r-right">0</b> · Sai <b id="r-wrong">0</b></div>
+        <div class="spacer"></div>
+        <label class="tog"><input type="checkbox" id="r-shuffleQ"> Xáo câu</label>
+        <label class="tog"><input type="checkbox" id="r-shuffleO"> Xáo đáp án</label>
+        <select id="r-filter" class="btn" style="padding:6px 10px">
+          <option value="all">Tất cả câu</option>
+          <option value="todo">Chưa làm</option>
+          <option value="wrong">Câu làm sai</option>
+        </select>
+        <button class="btn" id="r-reset">Làm lại từ đầu</button>
+      </div>
+      <div class="chips" id="r-topics"></div>
+      <div class="progress"><i id="r-bar"></i></div>
+    </div>
+    <div id="r-list"></div>
+  </section>
+
+  <!-- ESSAY -->
+  <section class="view" id="v-essay">
+    <h2>Tự luận (Part B) & bài luyện thêm</h2>
+    <p class="sub">Tự làm ra giấy trước, rồi bấm “Xem lời giải” để đối chiếu.</p>
+    <div id="e-list"></div>
+  </section>
+
+  <!-- EXAM -->
+  <section class="view" id="v-exam">
+    <div id="x-setup"></div>
+    <div id="x-run" style="display:none"></div>
+    <div id="x-result" style="display:none"></div>
+  </section>
+</main>
+
+<script>
+/* ============================ DỮ LIỆU ============================ */
+const TOPICS = {
+  bd:"Big data & dữ liệu", nn:"Neural network", tr:"Huấn luyện & leakage", ev:"Đánh giá mô hình",
+  sl:"Supervised learning", ssl:"Semi-supervised & NLP", pca:"PCA", code:"Code / Lab"
+};
+
+const MCQ = [
+{n:1,t:"bd",q:`Which “V” of big data refers to missing values, bad ticks, stale prices and accounting restatements?`,
+ o:["Volume","Velocity","Veracity","Value"],a:2,
+ ex:[`Volume nói về <b>quy mô/khối lượng</b> dữ liệu (TB, PB, hàng tỷ dòng), không nói gì về việc dữ liệu đúng hay sai.`,
+     `Velocity là <b>tốc độ</b> dữ liệu được sinh ra và cần xử lý (tick data, real-time), không phải chất lượng dữ liệu.`,
+     `Veracity = <b>độ tin cậy / chất lượng</b> dữ liệu. Thiếu giá trị, tick lỗi, giá cũ (stale), BCTC bị điều chỉnh lại đều là câu hỏi “dữ liệu này có đúng không?”.`,
+     `Value là <b>giá trị kinh tế / insight</b> khai thác được từ dữ liệu, là mục tiêu cuối chứ không phải lỗi của dữ liệu.`]},
+{n:2,t:"bd",q:`A bank's real-time card-fraud alert system is mainly a response to which characteristic of big data?`,
+ o:["Volume","Velocity","Variety","Value"],a:1,
+ ex:[`Lượng giao dịch thẻ lớn thật, nhưng điểm mấu chốt của hệ thống cảnh báo <b>thời gian thực</b> là phải phản ứng nhanh, không phải dung lượng lưu trữ.`,
+     `Giao dịch đến liên tục và phải chặn gian lận ngay lập tức → dữ liệu đến nhanh, xử lý nhanh = <b>Velocity</b>.`,
+     `Variety là sự <b>đa dạng định dạng</b> (text, ảnh, bảng, âm thanh). Giao dịch thẻ là dữ liệu có cấu trúc, khá đồng nhất.`,
+     `Value (giảm tổn thất) là mục đích của hệ thống, nhưng đặc tính dữ liệu buộc phải làm “real-time” là tốc độ, tức Velocity.`]},
+{n:3,t:"bd",q:`“Reporting delay, restatements and point-in-time availability” are the main issues of which data type?`,
+ o:["Fundamental data","Market data","Behavioral data","Alternative data"],a:0,
+ ex:[`Dữ liệu cơ bản (BCTC, EPS, chỉ số tài chính) được <b>công bố trễ</b> sau kỳ báo cáo, có thể bị <b>điều chỉnh lại</b>, nên phải dùng đúng số liệu có tại thời điểm đó (point-in-time).`,
+     `Market data (giá, khối lượng) được công bố gần như tức thời và không bị “restate”; vấn đề chính của nó là nhiễu, bad ticks, tần suất cao.`,
+     `Behavioral data (hành vi khách hàng, click, chi tiêu) có vấn đề chính là quyền riêng tư, thiên lệch mẫu, không phải độ trễ công bố hay điều chỉnh BCTC.`,
+     `Alternative data (ảnh vệ tinh, mạng xã hội, web scraping) có vấn đề chính là dữ liệu phi cấu trúc, lịch sử ngắn, độ phủ, chi phí và pháp lý.`]},
+{n:4,t:"bd",q:`In a financial modeling table, which column answers the question “When was the information known?”`,
+ o:["Entity key","Target","Metadata","Time key"],a:3,
+ ex:[`Entity key trả lời câu hỏi <b>“của ai / đối tượng nào?”</b> (mã cổ phiếu, ID khách hàng, mã công ty), không phải “khi nào”.`,
+     `Target là biến <b>cần dự báo</b> (y), ví dụ lợi suất ngày mai hay default. Nó không cho biết thông tin có từ lúc nào.`,
+     `Metadata là thông tin <b>mô tả thêm</b> (nguồn dữ liệu, đơn vị, ngành, định nghĩa biến), không phải khóa thời gian.`,
+     `Time key (ngày giao dịch, ngày công bố…) xác định <b>thông tin được biết khi nào</b>, là chìa khóa để tránh look-ahead bias.`]},
+{n:5,t:"nn",q:`If a multilayer neural network uses NO nonlinear activation function, then it`,
+ o:["becomes a decision tree.","is equivalent to a linear transformation.","cannot be trained by gradient descent.","always overfits."],a:1,
+ ex:[`Cây quyết định chia không gian theo các ngưỡng (hàm bậc thang). Bỏ activation không biến mạng thành cây; nó chỉ làm mạng thành tuyến tính.`,
+     `W₂(W₁x + b₁) + b₂ = (W₂W₁)x + (W₂b₁ + b₂). Ghép bao nhiêu lớp tuyến tính thì vẫn chỉ là <b>một phép biến đổi tuyến tính (affine)</b>, nên độ sâu không còn tác dụng.`,
+     `Mạng tuyến tính vẫn khả vi nên vẫn train bằng gradient descent bình thường (giống hồi quy tuyến tính).`,
+     `Ngược lại: mạng chỉ tuyến tính có capacity thấp nên dễ <b>underfit</b> hơn. Chữ “always overfits” sai hoàn toàn.`]},
+{n:6,t:"nn",q:`A dense layer receives 10 inputs and has 8 units. How many trainable parameters does it have?`,
+ o:["80","18","88","90"],a:2,
+ ex:[`80 chỉ là số <b>trọng số</b> (10 × 8), còn quên 8 bias, mỗi unit có 1 bias.`,
+     `18 = 10 + 8 là cộng số input với số unit. Mỗi input nối với mọi unit nên phải <b>nhân</b>.`,
+     `Số tham số = inputs × units + units = 10×8 + 8 = <b>88</b> (80 trọng số + 8 bias).`,
+     `90 = 80 + 10 là nhầm số bias theo số <b>input</b>. Bias gắn với mỗi <b>unit</b> (8), không gắn với input.`]},
+{n:7,t:"nn",q:`Which output layer and loss best fit a corporate default (yes/no) prediction?`,
+ o:["Linear output, mean squared error","Softmax output, multiclass cross-entropy","Tanh output, mean squared error","Sigmoid output, binary cross-entropy"],a:3,
+ ex:[`Linear output không bị chặn trong (0,1) nên không đọc được như xác suất; MSE là loss cho <b>hồi quy</b>.`,
+     `Softmax + multiclass CE dành cho bài <b>≥ 3 lớp</b>. Với yes/no, dùng softmax 2 output vẫn chạy được nhưng thừa; lựa chọn chuẩn (“best fit”) là 1 output sigmoid.`,
+     `Tanh cho giá trị trong (−1, 1), không phải xác suất; MSE không phải loss chuẩn cho phân loại (không ứng với likelihood, gradient yếu).`,
+     `Default là bài <b>nhị phân</b> → sigmoid cho xác suất trong (0,1), loss = <b>binary cross-entropy</b>.`]},
+{n:8,t:"nn",q:`A trading signal must lie in [−1, 1] (bearish → bullish). Which output activation is most suitable?`,
+ o:["Tanh","ReLU","Softplus","Linear"],a:0,
+ ex:[`Tanh cho đầu ra trong <b>[−1, 1]</b>, đối xứng quanh 0: âm = bearish, 0 = neutral, dương = bullish.`,
+     `ReLU cho [0, ∞): <b>không thể âm</b> (mất phía bearish) và không bị chặn trên.`,
+     `Softplus = log(1+eᶻ) cho (0, ∞): luôn dương, giống bản mượt của ReLU, nên cũng không ra tín hiệu âm.`,
+     `Linear cho (−∞, ∞), <b>không bị chặn</b> trong [−1, 1].`]},
+{n:9,t:"nn",q:`A neuron has w = (0.4, −0.2), b = 0.1 and ReLU activation. For x = (1, 3), its output is`,
+ o:["−0.1","0","0.1","0.5"],a:1,
+ ex:[`−0.1 là giá trị <b>z trước activation</b>. Quên áp ReLU: đầu ra ReLU không bao giờ âm.`,
+     `z = 0.4·1 + (−0.2)·3 + 0.1 = 0.4 − 0.6 + 0.1 = −0.1 → ReLU(−0.1) = max(0, −0.1) = <b>0</b>.`,
+     `ReLU không lấy trị tuyệt đối: ReLU(−0.1) = 0 chứ không phải 0.1. (0.1 cũng chỉ là bias b.)`,
+     `0.5 = 0.4 + 0.1 là quên số hạng w₂x₂ = −0.2·3 = −0.6.`]},
+{n:10,t:"nn",q:`Gradient descent: θ = 0.5, learning rate η = 0.1, gradient ∇J(θ) = −2. The updated θ is`,
+ o:["0.3","0.48","0.7","1.5"],a:2,
+ ex:[`0.3 = 0.5 − 0.1·2 là <b>sai dấu gradient</b> (dùng +2 thay vì −2). Gradient âm thì θ phải tăng.`,
+     `0.48 không khớp công thức nào hợp lý (như thể bước chỉ là 0.02). Bước đúng là η·|∇J| = 0.1·2 = 0.2.`,
+     `θ_mới = θ − η·∇J = 0.5 − 0.1·(−2) = 0.5 + 0.2 = <b>0.7</b>. Gradient âm → đi ngược gradient → θ tăng.`,
+     `1.5 = 0.5 − 0.5·(−2) là dùng sai learning rate (bước 1.0 thay vì 0.2).`]},
+{n:11,t:"tr",q:`When standardizing features z = (x − μ)/σ for a time-series model, μ and σ should be computed from`,
+ o:["the full sample (train + validation + test).","the training set only.","each set separately.","the test set only."],a:1,
+ ex:[`Dùng cả valid/test để tính μ, σ là đưa <b>thông tin tương lai</b> vào quá trình train → data leakage.`,
+     `Chỉ ước lượng μ, σ trên <b>train</b>, rồi dùng đúng các giá trị đó để chuẩn hóa valid/test. Như vậy mô phỏng đúng thực tế: tại thời điểm dự báo ta chỉ biết quá khứ.`,
+     `Chuẩn hóa mỗi tập riêng thì cùng một giá trị x cho ra z khác nhau giữa các tập (thang đo không nhất quán), và test đang dùng thống kê của chính nó, tức vẫn là leakage.`,
+     `Test set chỉ dùng để đánh giá cuối cùng, không được dùng để ước lượng bất cứ thứ gì, nhất là để chuẩn hóa dữ liệu train.`]},
+{n:12,t:"tr",q:`Using tomorrow's closing price inside today's input features is an example of`,
+ o:["look-ahead bias.","survivorship bias.","revised-data bias.","class imbalance."],a:0,
+ ex:[`Dùng thông tin <b>chưa biết tại thời điểm dự báo</b> (giá đóng cửa ngày mai) làm feature hôm nay = <b>look-ahead bias</b>.`,
+     `Survivorship bias là chỉ giữ lại các công ty/quỹ <b>còn tồn tại</b>, bỏ sót các công ty phá sản hoặc hủy niêm yết.`,
+     `Revised-data bias là dùng số liệu <b>đã được điều chỉnh</b> (GDP, BCTC revise) thay vì bản số liệu (vintage) có tại thời điểm đó.`,
+     `Class imbalance là tỷ lệ các lớp lệch nhau (ví dụ fraud rất hiếm), không liên quan tới việc dùng thông tin tương lai.`]},
+{n:13,t:"tr",q:`Training loss is very low but validation loss is poor. The most likely diagnosis is`,
+ o:["underfitting.","unstable optimization.","overfitting.","a learning rate that is too small."],a:2,
+ ex:[`Underfitting thì <b>cả train lẫn validation đều kém</b>. Ở đây train loss rất thấp nên không phải underfit.`,
+     `Unstable optimization thể hiện ở loss dao động mạnh hoặc phân kỳ, train loss không giảm đều. Ở đây train loss đã rất thấp.`,
+     `Train rất tốt, validation kém = mô hình <b>học thuộc nhiễu</b> của mẫu train, không tổng quát hóa → <b>overfitting</b>.`,
+     `Learning rate quá nhỏ làm train <b>chậm</b>, train loss vẫn còn cao (giống underfit), trái với “train loss very low”.`]},
+{n:14,t:"tr",q:`Which statement about dropout is correct?`,
+ o:["Dropout stays active when the model makes predictions.","Dropout adds the penalty λΣ|wⱼ| to the loss.","Dropout increases the number of trainable parameters.","A keep probability of 0.8 means a drop rate of 0.2."],a:3,
+ ex:[`Dropout <b>chỉ bật khi train</b>. Khi dự đoán, dropout tắt và dùng toàn bộ neuron (đã được scale).`,
+     `λΣ|wⱼ| là <b>L1 penalty</b> (LASSO), một kiểu regularization khác. Dropout tắt ngẫu nhiên neuron chứ không cộng penalty vào loss.`,
+     `Dropout <b>không thêm tham số</b> nào; nó chỉ là một mặt nạ ngẫu nhiên nhân vào activation.`,
+     `Drop rate = 1 − keep probability = 1 − 0.8 = <b>0.2</b>.`]},
+{n:15,t:"ev",q:`A classifier gives TP = 40, FP = 10, FN = 20, TN = 130. Precision and recall are`,
+ o:["Precision = 0.80, Recall = 0.67","Precision = 0.67, Recall = 0.80","Precision = 0.80, Recall = 0.87","Precision = 0.85, Recall = 0.67"],a:0,
+ ex:[`Precision = TP/(TP+FP) = 40/50 = <b>0.80</b>; Recall = TP/(TP+FN) = 40/60 = <b>0.667</b>.`,
+     `<b>Đảo ngược</b> precision và recall. Precision có FP ở mẫu, recall có FN ở mẫu.`,
+     `0.87 ≈ 130/150 = TN/(TN+FN) (negative predictive value), không phải recall. Recall chỉ dùng TP và FN.`,
+     `0.85 = (40+130)/200 là <b>accuracy</b>, không phải precision.`]},
+{n:16,t:"ev",q:`Using the same confusion matrix (TP = 40, FP = 10, FN = 20, TN = 130), the F1 score is closest to`,
+ o:["0.733","0.727","0.850","0.800"],a:1,
+ ex:[`0.733 = (0.8 + 0.667)/2 là <b>trung bình cộng</b>. F1 là <b>trung bình điều hòa</b>, luôn ≤ trung bình cộng.`,
+     `F1 = 2·P·R/(P+R) = 2·0.8·0.667/(0.8+0.667) ≈ <b>0.727</b> (hoặc 2TP/(2TP+FP+FN) = 80/110).`,
+     `0.85 = 170/200 là <b>accuracy</b>, cái bẫy quen thuộc.`,
+     `0.80 chỉ là <b>precision</b>, chưa kết hợp recall.`]},
+{n:17,t:"ev",q:`The probability cutoff is lowered from 0.5 to 0.3 without retraining. Which statement is ALWAYS true?`,
+ o:["Precision increases.","AUC increases.","Recall cannot decrease.","The model must be retrained."],a:2,
+ ex:[`Hạ cutoff thì nhiều quan sát được gắn dương hơn, có thể thêm nhiều FP nên precision <b>có thể giảm</b> (hoặc tăng). Không “luôn” tăng.`,
+     `AUC tính từ xác suất trên <b>mọi</b> cutoff. Đổi cutoff không đổi xác suất nên AUC <b>không đổi</b>.`,
+     `Mọi quan sát đã được gắn dương ở 0.5 vẫn dương ở 0.3 → TP không giảm, FN không tăng → <b>recall không thể giảm</b>.`,
+     `Cutoff là bước hậu xử lý trên xác suất đầu ra, <b>không cần train lại</b> mô hình.`]},
+{n:18,t:"ev",q:`Which statement about ROC–AUC is correct?`,
+ o:["AUC = 0.5 means perfect ranking.","Changing only the cutoff changes the AUC.","AUC is computed from thresholded 0/1 labels.","AUC measures ranking quality across cutoffs."],a:3,
+ ex:[`AUC = 0.5 là <b>ngẫu nhiên</b> (như tung đồng xu). AUC = 1.0 mới là xếp hạng hoàn hảo.`,
+     `AUC <b>không phụ thuộc cutoff</b>, vì nó tổng hợp trên tất cả các cutoff.`,
+     `AUC dùng <b>điểm số / xác suất liên tục</b>. Nếu chỉ dùng nhãn 0/1 thì ROC chỉ còn một điểm.`,
+     `AUC = xác suất một quan sát positive ngẫu nhiên được chấm điểm cao hơn một negative ngẫu nhiên → đo <b>chất lượng xếp hạng trên mọi cutoff</b>.`]},
+{n:19,t:"ev",q:`What is the role of the validation set?`,
+ o:["Adjust weights and biases to reduce training loss.","Choose settings such as λ, depth, hidden units and cutoff.","Report the final, untouched performance.","Be reshuffled randomly with the test set each epoch."],a:1,
+ ex:[`Học trọng số và bias là việc của <b>training set</b>.`,
+     `Validation dùng để <b>chọn siêu tham số</b> (λ, độ sâu cây, số hidden unit, cutoff, epoch dừng sớm…).`,
+     `Báo cáo kết quả cuối cùng, chưa bị “đụng tới” là vai trò của <b>test set</b>.`,
+     `Valid và test phải <b>cố định và tách biệt</b>. Với dữ liệu chuỗi thời gian còn phải giữ thứ tự thời gian, không được trộn ngẫu nhiên.`]},
+{n:20,t:"ev",q:`Training MSE by epoch: 0.050, 0.030, 0.020, 0.010. Validation MSE: 0.060, 0.045, 0.040, 0.052. A reasonable early-stopping epoch is`,
+ o:["1","2","3","4"],a:2,
+ ex:[`Epoch 1 có validation MSE cao nhất (0.060), dừng ở đây là quá sớm, mô hình còn underfit.`,
+     `Epoch 2 (0.045): validation vẫn còn <b>giảm tiếp</b> ở epoch 3, chưa nên dừng.`,
+     `Validation MSE <b>thấp nhất ở epoch 3</b> (0.040) rồi tăng lại ở epoch 4 → dừng sớm ở epoch 3.`,
+     `Ở epoch 4 train vẫn giảm nhưng validation tăng lên 0.052, tức đã bắt đầu <b>overfit</b>.`]},
+{n:21,t:"sl",q:`Predicting a defaulted loan's recovery rate (a number between 0% and 100%) is a`,
+ o:["regression task.","classification task.","clustering task.","dimensionality-reduction task."],a:0,
+ ex:[`Mục tiêu là <b>số liên tục</b> (0%–100%) → hồi quy (regression).`,
+     `Classification dự báo <b>nhãn rời rạc</b> (default / không default). Recovery rate là một con số, không phải nhãn.`,
+     `Clustering là học <b>không giám sát</b>, không có biến mục tiêu để dự báo.`,
+     `Giảm chiều (PCA…) nén các feature lại, không dự báo một target.`]},
+{n:22,t:"sl",q:`What is the key difference between LASSO and ridge regression?`,
+ o:["Ridge sets many coefficients exactly to zero.","LASSO can shrink some coefficients exactly to zero.","LASSO uses a squared (L2) penalty.","They always give identical coefficients."],a:1,
+ ex:[`Ngược lại: <b>ridge chỉ co hệ số về gần 0</b>, gần như không bao giờ đúng bằng 0.`,
+     `LASSO dùng penalty L1 (λΣ|βⱼ|), có “góc nhọn” tại 0 nên có thể đưa hệ số về <b>đúng 0</b>, tức tự chọn biến.`,
+     `LASSO dùng <b>L1 (|β|)</b>. Penalty bình phương L2 (β²) là của ridge.`,
+     `Hai penalty khác nhau nên hệ số khác nhau. Chỉ khi λ = 0 thì cả hai cùng trở về OLS.`]},
+{n:23,t:"sl",q:`In penalized regression, if λ is chosen far too large, the model will most likely`,
+ o:["overfit the training data.","return the OLS coefficients.","underfit and lose useful signal.","have more unstable coefficients."],a:2,
+ ex:[`Overfit xảy ra khi λ <b>quá nhỏ</b> (gần như không phạt).`,
+     `Trở về OLS là khi <b>λ = 0</b>, ngược hẳn với λ quá lớn.`,
+     `λ quá lớn → hệ số bị ép về rất nhỏ hoặc bằng 0 → mô hình quá đơn giản → <b>underfit</b>, mất cả tín hiệu hữu ích.`,
+     `λ lớn làm hệ số <b>ổn định hơn</b> (giảm variance, tăng bias), không bất ổn hơn.`]},
+{n:24,t:"sl",q:`K-NN regression with K = 3. The next-day returns of the 3 nearest historical patterns are 0.02, −0.01 and 0.05. The forecast is`,
+ o:["0.060","0.030","0.017","0.020"],a:3,
+ ex:[`0.060 là <b>tổng</b> 3 giá trị, còn quên chia cho K = 3.`,
+     `0.030 = 0.06/2 là chia sai số láng giềng (K = 3, không phải 2).`,
+     `0.017 ≈ 0.05/3 là cộng sai tử số. Tổng đúng là 0.02 − 0.01 + 0.05 = 0.06.`,
+     `K-NN regression lấy <b>trung bình</b> K láng giềng: (0.02 − 0.01 + 0.05)/3 = 0.06/3 = <b>0.020</b>.`]},
+{n:25,t:"sl",q:`A tree node contains 80% “no default” and 20% “default”. Its Gini impurity is`,
+ o:["0.32","0.68","0.72","0.16"],a:0,
+ ex:[`Gini = 1 − Σpᵢ² = 1 − (0.8² + 0.2²) = 1 − 0.68 = <b>0.32</b>.`,
+     `0.68 = 0.64 + 0.04 = Σpᵢ², còn <b>quên lấy 1 trừ đi</b>.`,
+     `0.72 ≈ <b>entropy</b> của node (−0.8·log₂0.8 − 0.2·log₂0.2 ≈ 0.722), không phải Gini.`,
+     `0.16 = 0.8·0.2 = p(1−p). Gini nhị phân là <b>2p(1−p)</b> = 0.32, ở đây thiếu nhân 2.`]},
+{n:26,t:"sl",q:`A node has entropy H(Y) = 0.971. After splitting on feature X, the conditional entropy is H(Y|X) = 0.600. The information gain is`,
+ o:["1.571","0.371","0.600","0.618"],a:1,
+ ex:[`1.571 = 0.971 + 0.600 là <b>cộng</b> thay vì trừ.`,
+     `IG = H(Y) − H(Y|X) = 0.971 − 0.600 = <b>0.371</b>: lượng bất định giảm đi nhờ split.`,
+     `0.600 chính là H(Y|X), tức <b>độ bất định còn lại</b> sau khi split, không phải lượng giảm.`,
+     `0.618 ≈ 0.600/0.971 là <b>tỷ số</b>, không phải hiệu. Information gain là phép trừ.`]},
+{n:27,t:"sl",q:`Why does a random forest usually overfit less than a single deep decision tree?`,
+ o:["It builds trees sequentially, each fixing the previous errors.","It uses only one feature per tree.","It averages many trees built from randomized samples and feature subsets.","It replaces splits with a linear model."],a:2,
+ ex:[`Xây cây <b>tuần tự</b>, cây sau sửa lỗi cây trước là mô tả của <b>boosting</b> (GBM, XGBoost), không phải random forest.`,
+     `RF chọn ngẫu nhiên một <b>tập con feature tại mỗi split</b>, không phải chỉ 1 feature cho cả cây.`,
+     `RF = bagging (bootstrap mẫu) + chọn ngẫu nhiên feature → các cây ít tương quan; <b>lấy trung bình / bỏ phiếu</b> giúp giảm variance nên ít overfit.`,
+     `RF vẫn dùng split của cây quyết định, không thay bằng mô hình tuyến tính.`]},
+{n:28,t:"sl",q:`In a soft-margin SVM, a very large C means the model`,
+ o:["allows a wider margin and tolerates noisy points.","ignores the slack variables ξᵢ.","becomes a linear regression.","penalizes margin violations heavily and fits training labels aggressively."],a:3,
+ ex:[`Biên rộng, chấp nhận điểm nhiễu là hành vi của <b>C nhỏ</b>.`,
+     `C là trọng số nhân với Σξᵢ trong hàm mục tiêu. C lớn thì ξ bị <b>phạt rất nặng</b> chứ không bị bỏ qua (C → ∞ tiến tới hard margin, ép ξ ≈ 0).`,
+     `SVM vẫn là bộ phân loại max-margin; tham số C không biến nó thành hồi quy tuyến tính.`,
+     `C lớn = <b>phạt nặng vi phạm biên</b> → cố phân loại đúng mọi điểm train → biên hẹp, dễ overfit.`]},
+{n:29,t:"code",q:`<code>model.compile(optimizer=keras.optimizers.Adam(learning_rate=0.01), loss="mse", metrics=["mae"])</code>. Which statement is correct?`,
+ o:["The network learns by minimizing MSE; MAE is only reported for monitoring.","The network learns by minimizing MAE.","0.01 is the batch size.","Adam is the activation function of the hidden layer."],a:0,
+ ex:[`Mô hình tối ưu theo <b>loss = "mse"</b>; <code>metrics</code> (MAE) chỉ được tính để theo dõi, không dùng để cập nhật trọng số.`,
+     `MAE nằm trong <code>metrics</code> nên chỉ để <b>báo cáo</b>. Thứ được tối thiểu hóa là <code>loss</code>.`,
+     `0.01 là <b>learning_rate</b>. Batch size đặt trong <code>model.fit(..., batch_size=...)</code>.`,
+     `Adam là <b>optimizer</b>. Activation được khai báo trong layer, ví dụ <code>Dense(..., activation="relu")</code>.`]},
+{n:30,t:"ssl",q:`A sentence gets probabilities positive 0.72, neutral 0.18, negative 0.10. The confidence threshold is τ = 0.80. In self-training, this sentence is`,
+ o:["added with pseudo-label “positive”.","added with pseudo-label “neutral”.","rejected and kept unlabeled.","added to the test set."],a:2,
+ ex:[`“Positive” có xác suất cao nhất nhưng 0.72 <b>chưa đạt</b> ngưỡng τ = 0.80, chưa đủ tự tin để gán pseudo-label.`,
+     `Neutral chỉ 0.18, không phải nhãn top-1, càng không đạt ngưỡng.`,
+     `Max probability 0.72 nhỏ hơn τ = 0.80 → <b>không nhận</b> pseudo-label, câu này vẫn ở trong tập chưa gán nhãn (có thể xét lại ở vòng sau).`,
+     `Test set chỉ chứa <b>nhãn thật</b>, không bao giờ thêm câu có pseudo-label vào test.`]},
+{n:31,t:"code",q:`<code>scaler = StandardScaler(); X_train_s = scaler.fit_transform(X_train)</code>. The correct line for the test set is`,
+ o:["<code>X_test_s = scaler.fit_transform(X_test)</code>","<code>X_test_s = scaler.transform(X_test)</code>","<code>X_test_s = StandardScaler().fit_transform(X_test)</code>","<code>X_test_s = scaler.fit(X_test)</code>"],a:1,
+ ex:[`<code>fit_transform</code> trên test sẽ <b>tính lại μ, σ từ test</b> (ghi đè thống kê của train) → leakage, thang đo khác train.`,
+     `Chỉ <code>transform</code> test bằng μ, σ <b>đã học từ train</b>.`,
+     `Tạo một scaler mới rồi fit trên test cũng là dùng thống kê của test, cùng lỗi leakage như phương án fit_transform.`,
+     `<code>fit()</code> chỉ ước lượng μ, σ và trả về <b>chính đối tượng scaler</b>, không trả dữ liệu đã chuẩn hóa. Hơn nữa nó vẫn fit trên test.`]},
+{n:32,t:"ssl",q:`According to the course, semi-supervised learning is acceptable only if it`,
+ o:["raises training accuracy.","produces many pseudo-labels.","makes the model more confident.","improves validation performance on confirmed (human) labels."],a:3,
+ ex:[`Train accuracy có thể tăng chỉ vì mô hình <b>học thuộc pseudo-label của chính nó</b>; điều đó không chứng minh nó tổng quát tốt hơn.`,
+     `Nhiều pseudo-label không có nghĩa là nhãn đúng; nhãn sai còn có thể <b>lan truyền và khuếch đại lỗi</b>.`,
+     `Tự tin hơn không có nghĩa là đúng hơn. Self-training có xu hướng <b>tự củng cố niềm tin</b>, kể cả khi đang sai.`,
+     `Quy tắc trong slide: SSL chỉ chấp nhận được nếu <b>cải thiện kết quả validation trên nhãn thật đã xác nhận</b>, so sánh trước và sau SSL.`]},
+{n:33,t:"ssl",q:`“The company did not increase profit” and “The company increased profit” get almost the same bag-of-words vector. This shows that bag-of-words`,
+ o:["loses word order and negation.","has a vocabulary that is too large.","needs a GPU.","cannot count words."],a:0,
+ ex:[`BoW chỉ <b>đếm từ</b>, bỏ qua thứ tự, nên mất phạm vi phủ định của “not”. Hai câu nghĩa ngược nhau mà vector gần như giống nhau.`,
+     `Vấn đề không nằm ở kích thước từ vựng; hai câu này chỉ khác vài từ. Lỗi là ở việc <b>bỏ qua ngữ cảnh / thứ tự</b>.`,
+     `BoW là phép đếm đơn giản, chạy tốt trên CPU. GPU không liên quan tới hiện tượng này.`,
+     `Ngược lại, BoW <b>chính là</b> phương pháp đếm từ.`]},
+{n:34,t:"ssl",q:`In BERT, “bidirectional” means the model`,
+ o:["reads text only from left to right.","was trained on two languages.","uses words on both sides of a word to determine its meaning.","has two output classes."],a:2,
+ ex:[`Chỉ đọc trái sang phải là mô hình <b>một chiều</b> (kiểu GPT), trái nghĩa với bidirectional.`,
+     `Hai ngôn ngữ là “bilingual”, không liên quan tới bidirectional.`,
+     `Bidirectional = dùng <b>ngữ cảnh cả bên trái và bên phải</b> của một từ để hiểu nghĩa của nó (huấn luyện bằng masked language modeling).`,
+     `Số lớp đầu ra do <b>task head</b> quyết định (ví dụ FinBERT có 3 lớp sentiment), không liên quan tới “bidirectional”.`]},
+{n:35,t:"ssl",q:`How should FinBERT's output for a news article be used?`,
+ o:["As a buy/sell recommendation.","As a sentiment signal (negative / neutral / positive) that is evidence for analyst review.","As a causal explanation of the next-day price move.","As a forecast of next-day return."],a:1,
+ ex:[`Sentiment không phải khuyến nghị mua/bán: giá còn phụ thuộc <b>kỳ vọng đã phản ánh</b> vào giá, định giá, rủi ro, kỳ hạn đầu tư.`,
+     `FinBERT phân loại cảm xúc văn bản. Đầu ra là <b>bằng chứng</b> để analyst xem xét, không phải quyết định.`,
+     `Sentiment tương quan với giá (nếu có) <b>không phải quan hệ nhân quả</b>.`,
+     `FinBERT không được huấn luyện để dự báo lợi suất; nó dự báo <b>nhãn cảm xúc</b> của câu chữ.`]},
+{n:36,t:"pca",q:`PCA on 4 variables gives eigenvalues 6, 2, 1, 1. The cumulative variance explained by the first two components is`,
+ o:["60%","75%","90%","80%"],a:3,
+ ex:[`60% = 6/10 mới chỉ là <b>PC1</b>.`,
+     `75% = 6/(6+2) là chia cho tổng của 2 thành phần đầu. Mẫu số phải là <b>tổng tất cả eigenvalue</b> (= 10).`,
+     `90% = (6+2+1)/10 là cộng <b>3</b> thành phần.`,
+     `Tổng = 6+2+1+1 = 10; (6+2)/10 = <b>80%</b>.`]},
+{n:37,t:"pca",q:`A PCA loading vector vₖ has mostly negative signs. What can we conclude?`,
+ o:["The component is bearish.","The component is noise.","Nothing from the sign alone: vₖ and −vₖ are equivalent directions.","The component explains negative variance."],a:2,
+ ex:[`Dấu của loading là <b>tùy ý</b> (do thuật toán), không mang nghĩa bearish hay bullish.`,
+     `Một PC là noise hay không phải xét qua <b>eigenvalue nhỏ</b> / phương sai giải thích, không dựa vào dấu loading.`,
+     `vₖ và −vₖ là <b>cùng một hướng</b>, cùng eigenvalue. Đảo dấu không đổi kết quả; phải đọc <b>mẫu hình</b> loading (cùng dấu hay ngược dấu nhau).`,
+     `Phương sai (eigenvalue của ma trận hiệp phương sai) luôn ≥ 0, không có “phương sai âm”.`]},
+{n:38,t:"pca",q:`Which description of PC2 is correct?`,
+ o:["The direction with the largest remaining variance, orthogonal to PC1.","The direction with the smallest variance.","Always the market factor.","A direction strongly correlated with PC1."],a:0,
+ ex:[`PC2 = hướng có <b>phương sai còn lại lớn nhất</b> sau PC1 và <b>trực giao</b> (không tương quan) với PC1.`,
+     `Hướng có phương sai nhỏ nhất là <b>PC cuối cùng</b>, không phải PC2.`,
+     `“Market factor” là cách diễn giải thường gặp của <b>PC1</b> (khi các loading cùng dấu), và không bao giờ là “always”.`,
+     `Các PC <b>trực giao, không tương quan</b> với nhau theo cách xây dựng.`]},
+{n:39,t:"code",q:`In the Week 2 lab, <code>data["next_ret"] = data["ret"].shift(-1)</code> creates`,
+ o:["the previous day's return, used as a feature.","the next day's return, used as the target.","a 1-day rolling average.","a column of missing values only."],a:1,
+ ex:[`Lợi suất ngày hôm trước là <code>shift(1)</code> (số dương). <code>shift(-1)</code> kéo giá trị <b>tương lai</b> lên.`,
+     `<code>shift(-1)</code> đưa giá trị ngày mai lên dòng hôm nay → đây là <b>target</b>; tuyệt đối không dùng làm feature (sẽ thành look-ahead bias).`,
+     `Rolling mean viết là <code>.rolling(n).mean()</code>, không phải shift.`,
+     `Chỉ <b>dòng cuối cùng</b> là NaN (vì không có “ngày mai”), các dòng khác đều có giá trị.`]},
+{n:40,t:"code",q:`For <code>LogisticRegression(C=...)</code> in scikit-learn, which statement is correct?`,
+ o:["Larger C means stronger regularization.","C is the number of classes.","C is the classification cutoff.","Smaller C means stronger shrinkage of coefficients."],a:3,
+ ex:[`Ngược lại: C = <b>1/λ</b>, nên C lớn nghĩa là điều chuẩn <b>yếu</b>.`,
+     `Số lớp do dữ liệu y quyết định, không phải tham số C.`,
+     `Cutoff mặc định là 0.5 trong <code>predict()</code>; C không phải ngưỡng phân loại.`,
+     `C là <b>nghịch đảo độ mạnh điều chuẩn</b>: C nhỏ → phạt mạnh → hệ số bị co nhiều hơn → mô hình đơn giản hơn.`]}
+];
+
+const ESSAYS = [
+{group:"Part B — Đề chính thức (2.0 điểm)", id:"b1", title:"Câu 1 (1.0đ): Fraud classifier và cutoff",
+ prompt:`<p class="prompt">Một mô hình gian lận cho xác suất trên 8 giao dịch test (y = 1 là fraud):</p>
+ <table class="t"><tr><th>Giao dịch</th><th>A</th><th>B</th><th>C</th><th>D</th><th>E</th><th>F</th><th>G</th><th>H</th></tr>
+ <tr><th>p̂</th><td>0.95</td><td>0.85</td><td>0.70</td><td>0.60</td><td>0.45</td><td>0.35</td><td>0.20</td><td>0.10</td></tr>
+ <tr><th>y thật</th><td>1</td><td>0</td><td>1</td><td>0</td><td>1</td><td>1</td><td>0</td><td>0</td></tr></table>
+ <ol type="a"><li>(0.4đ) Tại cutoff c = 0.5, tính TP, FP, TN, FN, accuracy, precision, recall.</li>
+ <li>(0.3đ) Làm lại với c = 0.3. Nếu bỏ sót fraud là mối lo chính, chọn cutoff nào? Giải thích.</li>
+ <li>(0.3đ) Tính AUC bằng cách đếm số cặp (fraud, non-fraud) được xếp hạng đúng. AUC có thay đổi giữa a) và b) không? Vì sao?</li></ol>`,
+ sol:`<table class="t"><tr><th>Cutoff</th><th>Dự báo fraud</th><th>TP</th><th>FP</th><th>TN</th><th>FN</th><th>Accuracy</th><th>Precision</th><th>Recall</th><th>F1</th></tr>
+ <tr><td>0.5</td><td>A, B, C, D</td><td>2 (A, C)</td><td>2 (B, D)</td><td>2 (G, H)</td><td>2 (E, F)</td><td>4/8 = 0.50</td><td>2/4 = 0.50</td><td>2/4 = 0.50</td><td>0.50</td></tr>
+ <tr><td>0.3</td><td>A – F</td><td>4 (A, C, E, F)</td><td>2 (B, D)</td><td>2 (G, H)</td><td>0</td><td>6/8 = 0.75</td><td>4/6 = 0.667</td><td>4/4 = 1.00</td><td>0.80</td></tr></table>
+ <p><b>b)</b> Chọn <b>c = 0.3</b>: bỏ sót fraud (FN) là lỗi đắt nhất, và recall tăng lên 100%.</p>
+ <div class="vn">Hạ cutoff làm nhiều giao dịch bị gắn “fraud” hơn nên bắt được cả E, F (recall tăng), đổi lại thường có thêm báo động giả. Ở ví dụ này FP vẫn là 2 nên precision cũng tăng. Nên ghi thêm: trong thực tế cutoff phải được chọn trên tập <b>validation</b> rồi cố định trước khi chạy test.</div>
+ <p><b>c)</b> 4 fraud × 4 non-fraud = 16 cặp. Cặp xếp đúng: A (0.95) thắng cả 4; C (0.70) thắng 3 (0.60, 0.20, 0.10); E (0.45) thắng 2; F (0.35) thắng 2 → 11 cặp. <b>AUC = 11/16 = 0.6875</b>, giống nhau cho c = 0.5 và c = 0.3.</p>
+ <div class="vn">AUC tính từ xác suất (thứ tự xếp hạng) trên mọi cutoff. Đổi cutoff không đổi xác suất nên AUC không đổi. Cách đếm cặp giống ví dụ 6/9 trong slide Week 3.</div>`},
+{group:"Part B — Đề chính thức (2.0 điểm)", id:"b2", title:"Câu 2 (1.0đ): PCA trên cổ phiếu ngân hàng",
+ prompt:`<p class="prompt">Chạy PCA trên ma trận tương quan của lợi suất ngày của 5 cổ phiếu ngân hàng niêm yết (chỉ giai đoạn train). Eigenvalue: <b>3.2, 0.9, 0.5, 0.3, 0.1</b>. Mọi loading của PC1 đều dương và xấp xỉ 0.45.</p>
+ <ol type="a"><li>(0.4đ) Tính tổng phương sai, tỷ lệ phương sai giải thích của từng thành phần, và tỷ lệ cộng dồn của 2 thành phần đầu.</li>
+ <li>(0.3đ) Giữ bao nhiêu thành phần nếu cần giải thích ít nhất 80% phương sai? Nêu thêm một cách kiểm tra khác.</li>
+ <li>(0.3đ) Diễn giải PC1. Một bạn nói: “PC1 giải thích 64% phương sai nên sẽ dự báo tốt lợi suất ngân hàng.” Bạn có đồng ý không? Vì sao?</li></ol>`,
+ sol:`<p><b>a)</b> Tổng phương sai = 3.2 + 0.9 + 0.5 + 0.3 + 0.1 = <b>5.0</b> (= số biến, vì PCA trên ma trận tương quan, mỗi biến chuẩn hóa có phương sai 1). EVR = <b>64%, 18%, 10%, 6%, 2%</b>. Cộng dồn PC1 + PC2 = <b>82%</b>.</p>
+ <p><b>b)</b> Giữ <b>2 thành phần</b> (82% ≥ 80%; riêng PC1 64% là chưa đủ). Kiểm tra khác: scree plot (đường cong phẳng dần sau PC2), sai số tái tạo (reconstruction error), loading có diễn giải được không, độ ổn định khi fit lại trên giai đoạn khác.</p>
+ <p><b>c)</b> PC1 có loading dương và gần bằng nhau trên cả 5 ngân hàng → đây là <b>biến động chung của ngành ngân hàng / thị trường</b>: các ngân hàng cùng tăng hoặc cùng giảm. Bản thân dấu không có ý nghĩa (−0.45 cho tất cả cũng là cùng một thành phần).</p>
+ <p><b>Không đồng ý:</b> phương sai giải thích đo lượng đồng biến động được tóm tắt, không đo khả năng dự báo. PCA là học không giám sát (không có target y); muốn dùng để dự báo thì phải kiểm định riêng out-of-sample.</p>
+ <div class="vn">Đây là lỗi “common misreading” trong slide Week 7: phương sai cao ≠ khả năng dự báo lợi suất cao. PCA cũng không tự đặt tên “market” cho thành phần; ta đặt tên dựa vào mẫu loading.</div>`},
+{group:"Bài tự luận luyện thêm (dạng dễ ra thi)", id:"e1", title:"E1. Một neuron, một bước backprop",
+ prompt:`<p class="prompt">Neuron sigmoid có w = (0.5, −0.25), b = 0.1, input x = (0.2, 0.4), target y = 1, loss L = ½(ŷ − y)², learning rate η = 0.5. Tính ŷ, L, δ = ∂L/∂z, và w₁, b sau cập nhật.</p>`,
+ sol:`<p>z = 0.5·0.2 − 0.25·0.4 + 0.1 = <b>0.1</b>; ŷ = σ(0.1) = <b>0.525</b>; L = ½(0.525 − 1)² = <b>0.113</b>.</p>
+ <p>σ′ = 0.525·0.475 = 0.249; δ = (ŷ − y)·σ′ = −0.475·0.249 = <b>−0.118</b>.</p>
+ <p>∂L/∂w₁ = δ·x₁ = −0.0237 → w₁ = 0.5 − 0.5·(−0.0237) = <b>0.512</b>; ∂L/∂b = δ → b = 0.1 − 0.5·(−0.118) = <b>0.159</b>.</p>
+ <div class="vn">Đây là bản thu nhỏ của ví dụ 5-3-2-1 trong Week 3: forward pass → loss → δ = (ŷ − y)·σ′(z) → gradient = δ × đầu vào → cập nhật θ − η·gradient. Vì ŷ &lt; y nên δ âm, trọng số và bias tăng để đẩy ŷ lên gần 1.</div>`},
+{group:"Bài tự luận luyện thêm (dạng dễ ra thi)", id:"e2", title:"E2. Đếm tham số và capacity",
+ prompt:`<p class="prompt">Mạng có 3 input, 1 hidden layer 4 unit và 1 output. Có bao nhiêu tham số? Vì sao một mạng lớn hơn nhiều có thể cho kết quả test kém hơn?</p>`,
+ sol:`<p>Hidden: 3·4 + 4 = 16; output: 4·1 + 1 = 5; <b>tổng 21</b>.</p>
+ <p>Mạng lớn có thể khớp cả nhiễu của mẫu (<b>overfitting</b>): train loss giảm trong khi validation loss tăng. Cách khắc phục: L1/L2, dropout, early stopping, giảm số unit, chọn kích thước mạng theo validation.</p>
+ <div class="vn">Nhiều tham số thì mô hình linh hoạt hơn nhưng dễ “học thuộc” nhiễu, nhất là với dữ liệu tài chính nhiều nhiễu, ít tín hiệu.</div>`},
+{group:"Bài tự luận luyện thêm (dạng dễ ra thi)", id:"e3", title:"E3. Data leakage",
+ prompt:`<p class="prompt">Nêu 4 dạng rò rỉ dữ liệu (data leakage) trong mô hình tài chính và cách phòng tránh từng dạng trong quy trình Python.</p>`,
+ sol:`<ol><li><b>Look-ahead bias</b> → chỉ tạo feature từ thông tin đã biết tại thời điểm t; <code>shift(-1)</code> chỉ dùng cho target.</li>
+ <li><b>Chuẩn hóa trên toàn mẫu</b> → fit scaler trên train, chỉ transform valid/test.</li>
+ <li><b>Revised-data bias</b> → dùng dữ liệu vĩ mô point-in-time (vintage).</li>
+ <li><b>Feature suy ra từ target</b> → không bao giờ tạo input từ lợi suất tương lai.</li></ol>
+ <p>Thêm: chia dữ liệu theo thứ tự thời gian, không bao giờ tune trên tập test.</p>
+ <div class="vn">Rò rỉ dữ liệu làm kết quả backtest đẹp giả tạo; khi triển khai thật sẽ thất bại.</div>`},
+{group:"Bài tự luận luyện thêm (dạng dễ ra thi)", id:"e4", title:"E4. Ridge vs LASSO vs Elastic net",
+ prompt:`<p class="prompt">Giải thích penalty của từng phương pháp, tác động lên hệ số, khi nào dùng trong tài chính, và cách chọn λ.</p>`,
+ sol:`<ul><li><b>Ridge</b>: thêm λΣβⱼ² → co hệ số đều, hiếm khi về 0 → hợp khi có nhiều biến tương quan (các kỳ hạn trái phiếu gần nhau).</li>
+ <li><b>LASSO</b>: thêm λΣ|βⱼ| → một số β về đúng 0 → hợp khi có nhiều biến ứng viên nhưng ít biến hữu ích, cần dễ diễn giải.</li>
+ <li><b>Elastic net</b>: kết hợp cả hai → hợp khi vừa có biến tương quan vừa có nhiều tín hiệu yếu.</li></ul>
+ <p>λ chọn theo sai số validation (chia theo thời gian): λ quá nhỏ → overfit, λ quá lớn → underfit.</p>
+ <div class="vn">λ là nút điều chỉnh đánh đổi bias–variance; trong sklearn tham số này tên là <code>alpha</code>.</div>`},
+{group:"Bài tự luận luyện thêm (dạng dễ ra thi)", id:"e5", title:"E5. Semi-supervised learning trong phát hiện gian lận",
+ prompt:`<p class="prompt">Ngân hàng có 500 nhãn fraud đã xác nhận và 2 triệu giao dịch chưa gán nhãn. Mô tả self-training, vai trò của ngưỡng tin cậy, và hai rủi ro.</p>`,
+ sol:`<p>Train trên 500 nhãn → dự báo phần chưa gán nhãn → thêm pseudo-label cho các mẫu có max probability ≥ τ → train lại, lặp lại. τ cao hơn = ít nhãn hơn nhưng sạch hơn.</p>
+ <p><b>Rủi ro:</b> khuếch đại lỗi (nhãn sai của mô hình yếu bị nhân lên), mất cân bằng lớp (fraud hiếm → mô hình thiên về dự báo “normal”), hành vi gian lận thay đổi (nhãn cũ lỗi thời), nhãn ban đầu bị lệch.</p>
+ <p>Chỉ chấp nhận SSL nếu cải thiện validation trên nhãn thật; giữ nguyên nhãn test.</p>
+ <div class="vn">Pseudo-label là “đoán” của mô hình, không phải sự thật. Phải so sánh trước và sau SSL trên nhãn thật.</div>`},
+{group:"Bài tự luận luyện thêm (dạng dễ ra thi)", id:"e6", title:"E6. Bag of words vs FinBERT",
+ prompt:`<p class="prompt">Nêu 3 hạn chế của bag-of-words và FinBERT khắc phục chúng như thế nào. Vì sao chỉ dựa vào sentiment là chưa đủ để ra quyết định mua/bán?</p>`,
+ sol:`<p><b>Hạn chế BoW:</b> mất thứ tự từ / phủ định; bỏ qua ngữ cảnh (“bank”, “interest” đa nghĩa); từ vựng cố định.</p>
+ <p><b>FinBERT:</b> dùng subword token, cơ chế attention và ngữ cảnh hai chiều, được điều chỉnh cho văn bản tài chính → nghĩa của một từ thay đổi theo các từ xung quanh.</p>
+ <p><b>Sentiment ≠ tín hiệu giao dịch:</b> phản ứng giá phụ thuộc vào kỳ vọng đã phản ánh vào giá, định giá, rủi ro và kỳ hạn; đầu ra là bằng chứng, không phải quan hệ nhân quả.</p>
+ <div class="vn">Tin tốt vẫn có thể khiến giá giảm nếu thị trường đã kỳ vọng cao hơn (“buy the rumor, sell the news”).</div>`}
+];
+
+/* ============================ TIỆN ÍCH ============================ */
+const $ = (s, el=document) => el.querySelector(s);
+const LET = ["A","B","C","D"];
+function rnd(n){ try{ const a=new Uint32Array(1); crypto.getRandomValues(a); return a[0]%n; }catch(e){ return Math.floor(Math.random()*n); } }
+function shuffle(arr){ const a=arr.slice(); for(let i=a.length-1;i>0;i--){ const j=rnd(i+1); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+const store = {
+  get(k,d){ try{ const v=localStorage.getItem("ft303_"+k); return v?JSON.parse(v):d; }catch(e){ return d; } },
+  set(k,v){ try{ localStorage.setItem("ft303_"+k, JSON.stringify(v)); }catch(e){} }
+};
+const byN = Object.fromEntries(MCQ.map(q=>[q.n,q]));
+
+/* Render khối giải thích cho 1 câu, order = mảng index phương án gốc theo thứ tự hiển thị */
+function explainHTML(q, order, chosen){
+  let h = `<div class="exp">`;
+  h += `<div class="keyline">Đáp án đúng: <b>${LET[order.indexOf(q.a)]}</b>. ${q.o[q.a]}</div>`;
+  order.forEach((oi, pos)=>{
+    const c = oi===q.a;
+    const picked = chosen===oi && !c;
+    h += `<div class="exp-item ${c?'c':'w'}">
+      <span class="badge">${LET[pos]} ${c?'✓ Đúng':'✗ Sai'}</span>
+      <div><div class="h">${c?'Vì sao đúng':'Sai ở đâu'}${picked?' — bạn đã chọn phương án này':''}</div>${q.ex[oi]}</div>
+    </div>`;
+  });
+  return h + `</div>`;
+}
+
+/* ============================ TABS ============================ */
+document.querySelectorAll(".tab").forEach(b=>b.addEventListener("click",()=>{
+  if(exam.running && b.dataset.view!=="exam" && !confirm("Bạn đang làm bài thi. Chuyển tab vẫn giữ đồng hồ chạy. Tiếp tục?")) return;
+  document.querySelectorAll(".tab").forEach(x=>x.classList.toggle("on",x===b));
+  document.querySelectorAll(".view").forEach(v=>v.classList.toggle("on",v.id==="v-"+b.dataset.view));
+  window.scrollTo({top:0});
+}));
+
+/* ============================ ÔN TẬP ============================ */
+const review = {
+  answers: store.get("review",{}),   // {n: chosenOriginalIndex}
+  topic: "all", order: MCQ.map(q=>q.n), optOrders: {},
+};
+function buildOptOrders(){
+  const sh = $("#r-shuffleO").checked;
+  MCQ.forEach(q=>{ review.optOrders[q.n] = sh ? shuffle([0,1,2,3]) : [0,1,2,3]; });
+}
+function renderTopicChips(){
+  const box = $("#r-topics");
+  const items = [["all","Tất cả"],...Object.entries(TOPICS)];
+  box.innerHTML = items.map(([k,v])=>`<button class="chip ${review.topic===k?'on':''}" data-k="${k}">${v}</button>`).join("");
+  box.querySelectorAll(".chip").forEach(c=>c.onclick=()=>{ review.topic=c.dataset.k; renderTopicChips(); renderReview(); });
+}
+function qCardReview(q){
+  const order = review.optOrders[q.n];
+  const chosen = review.answers[q.n];
+  const done = chosen!==undefined && chosen!==null;
+  const revealedOnly = chosen === -1;
+  let h = `<article class="card q" id="rq-${q.n}">
+    <div class="qhead"><span class="qnum">Câu ${q.n}</span><span class="tag">${TOPICS[q.t]}</span>
+    ${done && !revealedOnly ? `<span class="spacer"></span><span class="verdict ${chosen===q.a?'ok':'no'}">${chosen===q.a?'✓ Đúng':'✗ Sai'}</span>`:''}</div>
+    <p class="qtext">${q.q}</p><div class="opts">`;
+  order.forEach((oi,pos)=>{
+    let cls = "";
+    if(done){ if(oi===q.a) cls="right"; else if(oi===chosen) cls="wrong"; else cls="dim"; }
+    h += `<button class="opt ${cls}" data-oi="${oi}" ${done?'disabled':''}><span class="L">${LET[pos]}</span><span class="T">${q.o[oi]}</span></button>`;
+  });
+  h += `</div>`;
+  if(done) h += explainHTML(q, order, chosen);
+  else h += `<div class="qfoot"><button class="btn ghost" data-reveal>Hiện đáp án (không chọn)</button><span class="kbd">hoặc bấm vào một phương án</span></div>`;
+  return h + `</article>`;
+}
+function renderReview(){
+  const f = $("#r-filter").value;
+  let list = review.order.map(n=>byN[n]).filter(q=>review.topic==="all"||q.t===review.topic);
+  if(f==="todo") list = list.filter(q=>review.answers[q.n]===undefined);
+  if(f==="wrong") list = list.filter(q=>review.answers[q.n]!==undefined && review.answers[q.n]!==q.a);
+  $("#r-list").innerHTML = list.length ? list.map(qCardReview).join("") : `<div class="card empty">Không có câu nào phù hợp bộ lọc.</div>`;
+  $("#r-list").querySelectorAll(".q").forEach(card=>{
+    const n = +card.id.slice(3);
+    card.querySelectorAll(".opt").forEach(b=>b.onclick=()=>answerReview(n,+b.dataset.oi));
+    const rv = card.querySelector("[data-reveal]"); if(rv) rv.onclick=()=>answerReview(n,-1);
+  });
+  updateReviewStats();
+}
+function answerReview(n, oi){
+  review.answers[n] = oi; store.set("review", review.answers);
+  const card = $("#rq-"+n);
+  const tmp = document.createElement("div"); tmp.innerHTML = qCardReview(byN[n]);
+  card.replaceWith(tmp.firstElementChild);
+  updateReviewStats();
+}
+function updateReviewStats(){
+  const vals = Object.entries(review.answers);
+  const done = vals.length;
+  const right = vals.filter(([n,v])=>byN[n] && v===byN[n].a).length;
+  const wrong = vals.filter(([n,v])=>byN[n] && v!==-1 && v!==byN[n].a).length;
+  $("#r-done").textContent=done; $("#r-total").textContent=MCQ.length;
+  $("#r-right").textContent=right; $("#r-wrong").textContent=wrong;
+  $("#r-bar").style.width = (done/MCQ.length*100)+"%";
+}
+$("#r-shuffleQ").onchange = e=>{ review.order = e.target.checked ? shuffle(MCQ.map(q=>q.n)) : MCQ.map(q=>q.n); renderReview(); };
+$("#r-shuffleO").onchange = ()=>{ buildOptOrders(); renderReview(); };
+$("#r-filter").onchange = renderReview;
+$("#r-reset").onclick = ()=>{ if(!confirm("Xóa toàn bộ câu đã làm ở phần ôn tập?")) return; review.answers={}; store.set("review",{}); buildOptOrders(); if($("#r-shuffleQ").checked) review.order=shuffle(MCQ.map(q=>q.n)); renderReview(); window.scrollTo({top:0}); };
+
+/* ============================ TỰ LUẬN ============================ */
+function renderEssays(){
+  let h="", g="";
+  ESSAYS.forEach(e=>{
+    if(e.group!==g){ g=e.group; h+=`<div class="section-title">${g}</div>`; }
+    h += `<article class="card essay"><h3>${e.title}</h3>${e.prompt}
+      <button class="btn" data-sol="${e.id}">Xem lời giải</button>
+      <div class="sol" id="sol-${e.id}">${e.sol}</div></article>`;
+  });
+  $("#e-list").innerHTML = h;
+  $("#e-list").querySelectorAll("[data-sol]").forEach(b=>b.onclick=()=>{
+    const s=$("#sol-"+b.dataset.sol); s.classList.toggle("on"); b.textContent = s.classList.contains("on")?"Ẩn lời giải":"Xem lời giải";
+  });
+}
+
+/* ============================ THI THỬ ============================ */
+const exam = { running:false, cfg:{count:40, minutes:45, shuffleOpts:true}, qs:[], ans:{}, flags:{}, cur:0, end:0, tick:null, start:0 };
+
+function segHTML(name, opts, val){
+  return `<div class="seg">${opts.map(([v,l])=>`<button class="chip ${String(v)===String(val)?'on':''}" data-seg="${name}" data-v="${v}">${l}</button>`).join("")}</div>`;
+}
+function renderSetup(){
+  const c = exam.cfg;
+  const hist = store.get("history",[]);
+  $("#x-setup").innerHTML = `
+  <h2>Thi thử trắc nghiệm</h2>
+  <p class="sub">Mỗi lần bấm “Bắt đầu” sẽ rút và xáo câu hỏi mới (và xáo cả thứ tự A–D). Hết giờ sẽ tự nộp bài.</p>
+  <div class="card setup">
+    <div class="grid">
+      <div class="field"><div class="lbl">Số câu</div>${segHTML("count",[[10,"10 câu"],[20,"20 câu"],[30,"30 câu"],[40,"40 câu (full)"]],c.count)}</div>
+      <div class="field"><div class="lbl">Thời gian</div>${segHTML("minutes",[[10,"10'"],[15,"15'"],[20,"20'"],[30,"30'"],[45,"45'"],[60,"60'"]],c.minutes)}
+        <div class="kbd" style="margin-top:6px">Đề thật: 60 phút cho 40 trắc nghiệm + 2 tự luận.</div></div>
+      <div class="field"><div class="lbl">Tùy chọn</div><label class="tog"><input type="checkbox" id="x-so" ${c.shuffleOpts?'checked':''}> Xáo thứ tự đáp án A–D</label></div>
+    </div>
+    <div class="row"><button class="btn primary" id="x-start">Bắt đầu làm bài →</button>
+      <span class="kbd">Phím tắt khi thi: A/B/C/D hoặc 1–4 để chọn · ←/→ chuyển câu · F đánh dấu</span></div>
+    ${hist.length?`<div class="hist"><div class="section-title" style="margin-top:22px">Lịch sử làm bài</div><table>
+      <tr><th>Thời điểm</th><th>Số câu</th><th>Đúng</th><th>Điểm /10</th><th>Thời gian làm</th></tr>
+      ${hist.slice(-8).reverse().map(r=>`<tr><td>${r.when}</td><td>${r.total}</td><td>${r.right}</td><td><b>${r.score}</b></td><td>${r.used}</td></tr>`).join("")}
+      </table><button class="btn ghost" id="x-clearhist" style="margin-top:8px;font-size:13px">Xóa lịch sử</button></div>`:""}
+  </div>`;
+  $("#x-setup").querySelectorAll("[data-seg]").forEach(b=>b.onclick=()=>{
+    exam.cfg[b.dataset.seg] = +b.dataset.v;
+    if(b.dataset.seg==="count"){ exam.cfg.minutes = {10:10,20:20,30:30,40:45}[b.dataset.v]; }
+    renderSetup();
+  });
+  $("#x-so").onchange = e=> exam.cfg.shuffleOpts = e.target.checked;
+  $("#x-start").onclick = startExam;
+  const ch=$("#x-clearhist"); if(ch) ch.onclick=()=>{ if(confirm("Xóa lịch sử làm bài?")){ store.set("history",[]); renderSetup(); } };
+}
+function startExam(){
+  const picks = shuffle(MCQ.map(q=>q.n)).slice(0, exam.cfg.count);
+  exam.qs = picks.map(n=>({n, order: exam.cfg.shuffleOpts ? shuffle([0,1,2,3]) : [0,1,2,3]}));
+  exam.ans = {}; exam.flags = {}; exam.cur = 0; exam.running = true;
+  exam.start = Date.now(); exam.end = exam.start + exam.cfg.minutes*60*1000;
+  $("#x-setup").style.display="none"; $("#x-result").style.display="none"; $("#x-run").style.display="block";
+  renderRun(); clearInterval(exam.tick); exam.tick = setInterval(updateTimer, 250); updateTimer();
+  window.scrollTo({top:0});
+}
+function fmt(ms){ ms=Math.max(0,ms); const s=Math.ceil(ms/1000); const m=Math.floor(s/60); return String(m).padStart(2,"0")+":"+String(s%60).padStart(2,"0"); }
+function updateTimer(){
+  if(!exam.running) return;
+  const left = exam.end - Date.now();
+  const el = $("#x-timer"); if(!el) return;
+  el.textContent = fmt(left);
+  el.classList.toggle("warn", left<=5*60*1000 && left>60*1000);
+  el.classList.toggle("crit", left<=60*1000);
+  if(left<=0){ submitExam(true); }
+}
+function renderRun(){
+  const total = exam.qs.length, answered = Object.keys(exam.ans).length;
+  const item = exam.qs[exam.cur], q = byN[item.n], chosen = exam.ans[exam.cur];
+  $("#x-run").innerHTML = `
+  <div class="card exambar">
+    <div class="timer" id="x-timer">--:--</div>
+    <div class="stats">Đã trả lời <b>${answered}</b>/${total}</div>
+    <div class="spacer"></div>
+    <button class="btn" id="x-flag">${exam.flags[exam.cur]?'★ Bỏ đánh dấu':'☆ Đánh dấu'}</button>
+    <button class="btn primary" id="x-submit">Nộp bài</button>
+  </div>
+  <article class="card q">
+    <div class="qhead"><span class="qnum">Câu ${exam.cur+1} / ${total}</span></div>
+    <p class="qtext">${q.q}</p>
+    <div class="opts">${item.order.map((oi,pos)=>`<button class="opt ${chosen===oi?'sel':''}" data-oi="${oi}"><span class="L">${LET[pos]}</span><span class="T">${q.o[oi]}</span></button>`).join("")}</div>
+    <div class="qfoot"><button class="btn" id="x-prev" ${exam.cur===0?'disabled':''}>← Câu trước</button><div class="spacer"></div>
+      ${chosen!==undefined?`<button class="btn ghost" id="x-clear">Bỏ chọn</button>`:''}
+      <button class="btn" id="x-next" ${exam.cur===total-1?'disabled':''}>Câu sau →</button></div>
+  </article>
+  <div class="card"><div class="nav">${exam.qs.map((_,i)=>`<button class="${exam.ans[i]!==undefined?'ans':''} ${i===exam.cur?'cur':''} ${exam.flags[i]?'flag':''}" data-go="${i}">${i+1}</button>`).join("")}</div>
+  <div class="legend"><span class="a">Đã trả lời</span><span>Chưa trả lời</span><span class="f">Đánh dấu xem lại</span></div></div>`;
+  $("#x-run").querySelectorAll(".opt").forEach(b=>b.onclick=()=>{ exam.ans[exam.cur]=+b.dataset.oi; renderRun(); });
+  $("#x-run").querySelectorAll("[data-go]").forEach(b=>b.onclick=()=>{ exam.cur=+b.dataset.go; renderRun(); });
+  $("#x-prev").onclick=()=>{ if(exam.cur>0){exam.cur--;renderRun();} };
+  $("#x-next").onclick=()=>{ if(exam.cur<total-1){exam.cur++;renderRun();} };
+  const cl=$("#x-clear"); if(cl) cl.onclick=()=>{ delete exam.ans[exam.cur]; renderRun(); };
+  $("#x-flag").onclick=()=>{ exam.flags[exam.cur]=!exam.flags[exam.cur]; renderRun(); };
+  $("#x-submit").onclick=()=>{
+    const miss = total - Object.keys(exam.ans).length;
+    if(confirm(miss?`Còn ${miss} câu chưa trả lời. Vẫn nộp bài?`:"Nộp bài?")) submitExam(false);
+  };
+  updateTimer();
+}
+document.addEventListener("keydown", e=>{
+  if(!exam.running || !$("#v-exam").classList.contains("on")) return;
+  if(e.target.tagName==="INPUT"||e.target.tagName==="SELECT") return;
+  const k = e.key.toLowerCase();
+  const map = {a:0,b:1,c:2,d:3,"1":0,"2":1,"3":2,"4":3};
+  if(k in map){ exam.ans[exam.cur] = exam.qs[exam.cur].order[map[k]]; renderRun(); }
+  else if(e.key==="ArrowRight" && exam.cur<exam.qs.length-1){ exam.cur++; renderRun(); }
+  else if(e.key==="ArrowLeft" && exam.cur>0){ exam.cur--; renderRun(); }
+  else if(k==="f"){ exam.flags[exam.cur]=!exam.flags[exam.cur]; renderRun(); }
+});
+window.addEventListener("beforeunload", e=>{ if(exam.running){ e.preventDefault(); e.returnValue=""; } });
+
+function submitExam(auto){
+  if(!exam.running) return;
+  exam.running=false; clearInterval(exam.tick);
+  const used = Math.min(Date.now(), exam.end) - exam.start;
+  const total = exam.qs.length;
+  let right=0, blank=0; const topic={};
+  exam.qs.forEach((it,i)=>{
+    const q=byN[it.n]; const a=exam.ans[i];
+    topic[q.t] = topic[q.t]||{r:0,t:0}; topic[q.t].t++;
+    if(a===undefined) blank++; else if(a===q.a){ right++; topic[q.t].r++; }
+  });
+  const wrong = total-right-blank;
+  const score10 = (right/total*10).toFixed(2);
+  const now = new Date();
+  const hist = store.get("history",[]);
+  hist.push({when: now.toLocaleString("vi-VN",{hour:"2-digit",minute:"2-digit",day:"2-digit",month:"2-digit"}), total, right, score: score10, used: fmt(used)});
+  store.set("history", hist.slice(-30));
+  exam.result = {auto, used, total, right, wrong, blank, score10, topic};
+  $("#x-run").style.display="none"; $("#x-result").style.display="block";
+  exam.rfilter="all"; renderResult(); window.scrollTo({top:0});
+}
+function renderResult(){
+  const r = exam.result;
+  const partA = r.total===40 ? `<div class="kpi"><div class="v">${(r.right*0.2).toFixed(1)}/8.0</div><div class="k">Điểm Part A (0.2đ/câu)</div></div>` : "";
+  const topics = Object.entries(r.topic).sort((a,b)=>a[1].r/a[1].t - b[1].r/b[1].t);
+  let h = `<div class="card result">
+    ${r.auto?`<div class="keyline" style="margin-bottom:14px;border-color:var(--bad);background:var(--bad-soft)">⏰ Hết giờ, bài đã được tự động nộp.</div>`:""}
+    <div class="score">
+      <div class="big">${r.score10}<small> /10</small></div>
+      <div class="kpis">
+        <div class="kpi"><div class="v" style="color:var(--ok)">${r.right}</div><div class="k">Đúng</div></div>
+        <div class="kpi"><div class="v" style="color:var(--bad)">${r.wrong}</div><div class="k">Sai</div></div>
+        <div class="kpi"><div class="v">${r.blank}</div><div class="k">Bỏ trống</div></div>
+        <div class="kpi"><div class="v">${fmt(r.used)}</div><div class="k">Thời gian làm</div></div>
+        ${partA}
+      </div>
+    </div>
+    <div class="section-title">Theo chủ đề (yếu nhất ở trên)</div>
+    <div class="bytopic">${topics.map(([k,v])=>`<div class="bt"><span>${TOPICS[k]}</span><span class="bar"><i style="width:${v.r/v.t*100}%;${v.r/v.t<.5?'background:var(--bad)':v.r/v.t<.8?'background:var(--warn)':''}"></i></span><span class="mono">${v.r}/${v.t}</span></div>`).join("")}</div>
+    <div class="row" style="margin-top:18px"><button class="btn primary" id="x-again">Làm bài mới (xáo câu mới)</button><button class="btn" id="x-setupbtn">Đổi cấu hình</button></div>
+  </div>
+  <div class="card"><div class="nav">${exam.qs.map((it,i)=>{ const a=exam.ans[i], q=byN[it.n]; const c=a===undefined?'e':a===q.a?'r':'w'; return `<button class="${c}" data-jump="${i}">${i+1}</button>`; }).join("")}</div>
+  <div class="legend">Xanh = đúng · Đỏ = sai · Viền đứt = bỏ trống · Bấm số để nhảy tới câu</div></div>
+  <div class="row" style="margin:16px 0 12px"><b>Xem lại bài làm</b><div class="spacer"></div>${segHTML("rf",[["all","Tất cả"],["wrong","Sai + bỏ trống"],["right","Đúng"]],exam.rfilter)}</div>
+  <div id="x-rlist"></div>`;
+  $("#x-result").innerHTML = h;
+  renderResultList();
+  $("#x-again").onclick = startExam;
+  $("#x-setupbtn").onclick = ()=>{ $("#x-result").style.display="none"; $("#x-setup").style.display="block"; renderSetup(); window.scrollTo({top:0}); };
+  $("#x-result").querySelectorAll("[data-seg=rf]").forEach(b=>b.onclick=()=>{ exam.rfilter=b.dataset.v; renderResult(); });
+  $("#x-result").querySelectorAll("[data-jump]").forEach(b=>b.onclick=()=>{
+    if(exam.rfilter!=="all"){ exam.rfilter="all"; renderResult(); }
+    const el=$("#xr-"+b.dataset.jump); if(el) el.scrollIntoView({behavior:"smooth",block:"start"});
+  });
+}
+function renderResultList(){
+  let h="";
+  exam.qs.forEach((it,i)=>{
+    const q=byN[it.n], a=exam.ans[i];
+    const st = a===undefined?'blank':a===q.a?'right':'wrong';
+    if(exam.rfilter==="wrong" && st==="right") return;
+    if(exam.rfilter==="right" && st!=="right") return;
+    h += `<article class="card q" id="xr-${i}" style="scroll-margin-top:80px">
+      <div class="qhead"><span class="qnum">Câu ${i+1}</span><span class="tag">${TOPICS[q.t]}</span><span class="tag">Câu gốc ${q.n}</span><span class="spacer"></span>
+      <span class="verdict ${st==='right'?'ok':'no'}">${st==='right'?'✓ Đúng':st==='wrong'?'✗ Sai':'— Bỏ trống'}</span></div>
+      <p class="qtext">${q.q}</p><div class="opts">
+      ${it.order.map((oi,pos)=>`<button class="opt ${oi===q.a?'right':oi===a?'wrong':'dim'}" disabled><span class="L">${LET[pos]}</span><span class="T">${q.o[oi]}</span></button>`).join("")}
+      </div>${explainHTML(q,it.order,a)}</article>`;
+  });
+  $("#x-rlist").innerHTML = h || `<div class="card empty">Không có câu nào.</div>`;
+}
+
+/* ============================ KHỞI TẠO ============================ */
+buildOptOrders(); renderTopicChips(); renderReview(); renderEssays(); renderSetup();
+</script>
+</body>
+</html>
